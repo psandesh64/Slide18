@@ -3,8 +3,8 @@ import { useState } from "react";
 const Toggleable = (props) => {
     const [visible, setVisible] = useState(false)
 
-    const hideWhenVisible = { display : loginVisible ? 'none' : ''}
-    const showhenVisible = { display : loginVisible ? '' : 'none'}
+    const hideWhenVisible = { display : visible ? 'none' : ''}
+    const showhenVisible = { display : visible ? '' : 'none'}
 
     return (
         <div>

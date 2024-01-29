@@ -20,7 +20,6 @@ const App = () => {
   })
   const [blogs,setBlogs] =  useState([])
   const [notification,setNotification] = useState({status:'',css:''})
-  const [loginVisible, setLoginVisible] = useState(false)
   
   useEffect(()=>{
     const loggedUserJSON = window.localStorage.getItem('loggedUserObj')
@@ -84,23 +83,18 @@ const App = () => {
     }
   }
   const loginForm = () => {
-    const hideWhenVisible = { display : loginVisible ? 'none' : ''}
-    const showhenVisible = { display : loginVisible ? '' : 'none'}
+    
 
     return (
       <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Login</button>
-        </div>
-        <div style={showhenVisible}>
+        <Toggleable buttonLabel = 'login'>
           <LoginForm 
           username = {username}
           password = {password}
           handleUsernameChange={(event) => setUsername(event.target.value)}
           handlePasswordChange={(event) => setPassword(event.target.value)}
           handleLogin={handleLogin}/>
-          <button onClick={() => setLoginVisible(false)}>Cancel</button>
-        </div>
+        </Toggleable>
       </div>
     )
   }
