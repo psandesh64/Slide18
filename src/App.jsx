@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,19 +7,18 @@ import blogService from './services/blog'
 import NotificationMsg from './components/notificationmsg'
 import LoginForm from './components/loginform'
 import Toggleable from './components/toggleable'
+import BlogForm from './components/blogform'
 
 const App = () => {
   const [username,setUsername] = useState('')
   const [password,setPassword] = useState('')
   const [user,setUser] = useState(null)
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url:'',
-    likes: 0
-  })
+  
   const [blogs,setBlogs] =  useState([])
   const [notification,setNotification] = useState({status:'',css:''})
+
+  const blogFormRef = useRef()
+
   
   useEffect(()=>{
     const loggedUserJSON = window.localStorage.getItem('loggedUserObj')
@@ -38,7 +37,7 @@ const App = () => {
     };
   
     fetchData();
-  }, [newBlog]);
+  }, []);
   
 
   const handleLogin = async (event) => {
@@ -61,20 +60,12 @@ const App = () => {
       console.error(exception)  
     }
   }
-  const addBlog = async (event) => {
-    event.preventDefault()
+  const addNewBlog = async (newBlog) => {
 
     try{
       const blogCreated = await blogService.createBlog( newBlog )
       setNotification({status:'Created Successfully',css:'success'})
       setTimeout(()=>setNotification(''),2000);
-      // delete newBlog._id
-      setNewBlog({
-        title: '',
-        author: '',
-        url:'',
-        likes: 0,
-      })
     
     } catch (exception) {
       console.log(exception)
@@ -84,7 +75,6 @@ const App = () => {
   }
   const loginForm = () => {
     
-
     return (
       <div>
         <Toggleable buttonLabel = 'login'>
@@ -98,21 +88,14 @@ const App = () => {
       </div>
     )
   }
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <label>Title : </label>
-      <input type='text' name='title' value={newBlog.title} 
-      onChange={(event) => setNewBlog({...newBlog,title:event.target.value})}/>
-      <label>Author : </label>
-      <input type='text' name='author' value={newBlog.author}
-      onChange={(event) => setNewBlog({...newBlog,author:event.target.value})}/>
-      <label>Likes : </label>
-      <input type='number' name='likes' value={newBlog.likes}
-      onChange={(event) => setNewBlog({...newBlog,likes:event.target.value})}/>
-
-      <button type='submit'>Save</button>
-    </form>
-  )
+  
+  const blogForm  = () => {
+    return (
+    <Toggleable buttonLabel='New Blog' ref = {blogFormRef}>
+      <BlogForm createBlog={addNewBlog}/>
+    </Toggleable>
+    )
+  }
   if (user === null) {
     return (
       <div>
@@ -130,7 +113,7 @@ return (
     <h2>Blogs</h2>
     <button onClick={()=> {window.localStorage.removeItem('loggedUserObj');setUser(null)}}>Logout</button>
     </div>
-    <div style={{margin:"10px"}}>{blogForm()}</div>
+    <div>{blogForm()}</div>
     {blogs.map(blog => (
       <div key={blog._id}>
         <h3>Title : {blog.title}</h3>
