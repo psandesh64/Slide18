@@ -63,6 +63,7 @@ const App = () => {
   const addNewBlog = async (newBlog) => {
 
     try{
+      blogFormRef.current.toggleVisibility()
       const blogCreated = await blogService.createBlog( newBlog )
       setNotification({status:'Created Successfully',css:'success'})
       setTimeout(()=>setNotification(''),2000);
@@ -91,7 +92,7 @@ const App = () => {
   
   const blogForm  = () => {
     return (
-    <Toggleable buttonLabel='New Blog' ref = {blogFormRef}>
+    <Toggleable buttonLabel='New Blog' ref={blogFormRef}>
       <BlogForm createBlog={addNewBlog}/>
     </Toggleable>
     )
