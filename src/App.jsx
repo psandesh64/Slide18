@@ -7,6 +7,7 @@ import blogService from './services/blog'
 import NotificationMsg from './components/notificationmsg'
 import LoginForm from './components/loginform'
 import Toggleable from './components/toggleable'
+import BlogToggleable from './components/blogtoggleable'
 import BlogForm from './components/blogform'
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
   const [notification,setNotification] = useState({status:'',css:''})
 
   const blogFormRef = useRef()
+  const blogHideRef = useRef()
 
   
   useEffect(()=>{
@@ -65,6 +67,7 @@ const App = () => {
     try{
       blogFormRef.current.toggleVisibility()
       const blogCreated = await blogService.createBlog( newBlog )
+      setBlogs((prevBlogs) => [...prevBlogs, blogCreated])
       setNotification({status:'Created Successfully',css:'success'})
       setTimeout(()=>setNotification(''),2000);
     
@@ -117,12 +120,11 @@ return (
     <div>{blogForm()}</div>
     {blogs.map(blog => (
       <div key={blog._id}>
-        <h3>Title : {blog.title}</h3>
-        <p>Author : {blog.author}</p>
-        <span>Likes : {blog.likes}</span>
+        <BlogToggleable blog={blog}/>
       </div>
     ))}
   </div>
 )
 }
+
 export default App
