@@ -88,6 +88,19 @@ const App = () => {
       console.log(exception)
     }
   }
+  const deleteBlog = async (id) => {
+    try{
+      const confirmation = confirm("Are you sure you want to delete this?")
+      if (confirmation) {
+      const blogDeleted = await blogService.deleteBlog(id) 
+      const updatedBlogs = await blogService.getBlogs()
+      setBlogs(updatedBlogs)
+      }
+      else {alert("Operation Cancelled")}
+    }catch (exception) {
+      console.log(exception)
+    }
+  }
   const loginForm = () => {
     
     return (
@@ -131,7 +144,7 @@ return (
     <div>{blogForm()}</div>
     {blogs.map(blog => (
       <div key={blog._id}>
-        <BlogToggleable blog={blog} likeOption = {likeBlog}/>
+        <BlogToggleable blog={blog} likeOption = {likeBlog} deleteOption={deleteBlog} currentUser={user}/>
       </div>
     ))}
   </div>

@@ -1,6 +1,6 @@
 import { useState} from "react";
 
-const BlogToggleable = ({blog,likeOption}) => {
+const BlogToggleable = ({blog,likeOption,deleteOption,currentUser}) => {
     const [visible, setVisible] = useState(false)
 
     const hideWhenVisible = { display : visible ? 'none' : ''}
@@ -9,7 +9,8 @@ const BlogToggleable = ({blog,likeOption}) => {
     const toggleVisibility = () => {
         setVisible(!visible)
     }
-    console.log(blog.likes)
+    // console.log(blog.likes)
+    console.log(blog.user.username,currentUser.username)
    
     return (
         <div>
@@ -21,6 +22,7 @@ const BlogToggleable = ({blog,likeOption}) => {
             <span>Likes: {blog.likes !== undefined ? blog.likes.length : 0}</span><br/>
             <span>User: {blog.user.name}</span><br/>
             <button onClick={()=>likeOption(blog._id)}>Like</button>
+            {blog.user.username === currentUser.username && <button onClick={() => deleteOption(blog._id)}>Delete</button>}
             </div>
         </div>
     )
