@@ -16,21 +16,21 @@ const createBlog = async params => {
     return response.data
 }
 
-const getBlogs = async () =>{
+const getBlogs = async () => {
     const response = await axios.get(baseUrl)
     return response.data
 }
 const putBloglikes = async (id) => {
     const config = {
         headers: { Authorization: token }
-    };
+    }
 
     try {
-        const response = await axios.put(`${baseUrl}/like/${id}`, null, config);
-        return response.data;
+        const response = await axios.put(`${baseUrl}/like/${id}`, null, config)
+        return response.data
     } catch (error) {
-        console.error('Error updating blog likes:', error);
-        throw error;
+        console.error('Error updating blog likes:', error)
+        throw error
     }
 }
 const deleteBlog = async (id) => {
@@ -39,11 +39,11 @@ const deleteBlog = async (id) => {
     }
 
     try {
-        const response = await axios.delete(`${baseUrl}/${id}`, config);
-        return response.data;
+        const response = await axios.delete(`${baseUrl}/${id}`, config)
+        return response.data
     } catch (error) {
-        console.error('Error deleting blog:', error);
-        throw error;
+        console.error('Error deleting blog:', error)
+        throw error
     }
 }
-export default { createBlog, setToken, getBlogs, putBloglikes, deleteBlog}
+export default { createBlog, setToken, getBlogs, putBloglikes, deleteBlog }
