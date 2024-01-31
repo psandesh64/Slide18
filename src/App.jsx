@@ -19,8 +19,6 @@ const App = () => {
   const [notification,setNotification] = useState({status:'',css:''})
 
   const blogFormRef = useRef()
-  const blogHideRef = useRef()
-
   
   useEffect(()=>{
     const loggedUserJSON = window.localStorage.getItem('loggedUserObj')
@@ -67,7 +65,9 @@ const App = () => {
     try{
       blogFormRef.current.toggleVisibility()
       const blogCreated = await blogService.createBlog( newBlog )
-      setBlogs((prevBlogs) => [...prevBlogs, blogCreated])
+      const updatedBlogs = await blogService.getBlogs(); // Fetch the updated list of blogs
+      setBlogs(updatedBlogs)
+      // setBlogs((prevBlogs) => [...prevBlogs, blogCreated])
       setNotification({status:'Created Successfully',css:'success'})
       setTimeout(()=>setNotification(''),2000);
     
@@ -75,6 +75,16 @@ const App = () => {
       console.log(exception)
       setNotification({status:'Problem creating new Blog', css:'error'})
       setTimeout(()=>setNotification(''),2000);
+    }
+  }
+  const likeBlog = async (id) => {
+    try {
+      const blogLiked = await blogService.putBloglikes(id)
+      console.log(blogLiked)
+      const updatedBlogs = await blogService.getBlogs()
+      setBlogs(updatedBlogs)
+    } catch (exception) {
+      console.log(exception)
     }
   }
   const loginForm = () => {
@@ -120,7 +130,7 @@ return (
     <div>{blogForm()}</div>
     {blogs.map(blog => (
       <div key={blog._id}>
-        <BlogToggleable blog={blog}/>
+        <BlogToggleable blog={blog} likeOption = {likeBlog}/>
       </div>
     ))}
   </div>

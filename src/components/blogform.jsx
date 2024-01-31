@@ -13,13 +13,11 @@ const BlogForm = ({createBlog}) => {
             title: newBlog.title,
             author: newBlog.author,
             url:newBlog.url,
-            likes: newBlog.likes
         })
         setNewBlog({
             title: '',
             author: '',
             url:'',
-            likes: 0
         })
     }
     
@@ -32,10 +30,6 @@ const BlogForm = ({createBlog}) => {
         <label>Author : </label>
         <input type='text' name='author' value={newBlog.author}
         onChange={(event) => setNewBlog({...newBlog,author:event.target.value})}/>
-        <label>Likes : </label>
-        <input type='number' name='likes' value={newBlog.likes}
-        onChange={(event) => setNewBlog({...newBlog,likes:event.target.value})}/>
-
         <button type='submit'>Save</button>
         </form>
     )
