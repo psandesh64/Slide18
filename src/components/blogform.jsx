@@ -21,6 +21,7 @@ const BlogForm = ({ createBlog, handlePhotoChange, image }) => {
             url:'',
             image:null
         })
+        image.preview = null
     }
 
     return(
