@@ -9,7 +9,10 @@ const setToken = newToken => {
 
 const createBlog = async params => {
     const config = {
-        headers: { Authorization: token }
+        headers: {
+            Authorization: token,
+            'Content-Type': 'multipart/form-data'
+        }
     }
     console.log(config.headers)
     const response = await axios.post(baseUrl,params,config)

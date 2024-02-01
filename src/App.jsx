@@ -9,6 +9,7 @@ import LoginForm from './components/loginform'
 import Toggleable from './components/toggleable'
 import BlogToggleable from './components/blogtoggleable'
 import BlogForm from './components/blogform'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 
 const App = () => {
     const [username,setUsername] = useState('')
@@ -18,6 +19,18 @@ const App = () => {
     const [notification,setNotification] = useState({
         status:'',css:''
     })
+    const [image, setImage] = useState({
+        preview: '',
+        raw: ''
+    })
+    const handlePhotoChange = (e) => {
+        if (e.target.files.length) {
+            setImage({
+                preview: URL.createObjectURL(e.target.files[0]),
+                raw: e.target.files[0],
+            })
+        }
+    }
 
     const blogFormRef = useRef()
     useEffect(() => {
@@ -115,7 +128,7 @@ const App = () => {
     const blogForm  = () => {
         return (
             <Toggleable buttonLabel='New Blog' ref={blogFormRef}>
-                <BlogForm createBlog={addNewBlog}/>
+                <BlogForm createBlog={addNewBlog} handlePhotoChange={handlePhotoChange} image={image}/>
             </Toggleable>
         )
     }
@@ -132,16 +145,23 @@ const App = () => {
     return (
         <div>
             <div>
+                <Link style={{ padding: 10 }} to='/'>Show Blog</Link>
+                <Link style={{ padding: 10 }} to='/createBlog'>Create Blog</Link>
+            </div>
+
+            <div>
                 <NotificationMsg noti={notification}/>
                 <h2>Blogs</h2>
                 <button onClick={() => {window.localStorage.removeItem('loggedUserObj');setUser(null)}}>Logout</button>
             </div>
-            <div>{blogForm()}</div>
-            {blogs.map(blog => (
-                <div key={blog._id}>
-                    <BlogToggleable blog={blog} likeOption = {likeBlog} deleteOption={deleteBlog} currentUser={user}/>
-                </div>
-            ))}
+            <Routes>
+                <Route path='/createBlog' element={<div>{blogForm()}</div>}/>
+                <Route path='/' element={blogs.map(blog => (
+                    <div key={blog._id}>
+                        <BlogToggleable blog={blog} likeOption = {likeBlog} deleteOption={deleteBlog} currentUser={user}/>
+                    </div>
+                ))}/>
+            </Routes>
         </div>
     )
 }

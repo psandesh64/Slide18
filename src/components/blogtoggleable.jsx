@@ -21,6 +21,9 @@ const BlogToggleable = ({ blog,likeOption,deleteOption,currentUser }) => {
                 <span>Author: {blog.author}</span><br/>
                 <span>Likes: {blog.likes !== undefined ? blog.likes.length : 0}</span><br/>
                 <span>User: {blog.user.name}</span><br/>
+                {blog.image && (
+                    <img src={`http://localhost:3001/${blog.image}`} alt={`Image for ${blog.title}`} style={{ width: '90px' }} />
+                )}
                 <button onClick={() => likeOption(blog._id)}>Like</button>
                 {blog.user.username === currentUser.username && <button onClick={() => deleteOption(blog._id)}>Delete</button>}
             </div>
