@@ -9,8 +9,6 @@ const BlogToggleable = ({ blog,likeOption,deleteOption,currentUser }) => {
     const toggleVisibility = () => {
         setVisible(!visible)
     }
-    // console.log(blog.likes)
-    console.log(blog.user.username,currentUser.username)
 
     return (
         <div>

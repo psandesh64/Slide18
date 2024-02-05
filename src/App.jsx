@@ -4,12 +4,16 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import loginService from './services/login'
 import blogService from './services/blog'
+import userService from './services/user'
 import NotificationMsg from './components/notificationmsg'
 import LoginForm from './components/loginform'
 import Toggleable from './components/toggleable'
 import BlogToggleable from './components/blogtoggleable'
 import BlogForm from './components/blogform'
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
+
+import Home from './pages/homepage'
+import RegisterUser from './pages/registeruser'
 
 const App = () => {
     const [username,setUsername] = useState('')
@@ -19,6 +23,7 @@ const App = () => {
     const [notification,setNotification] = useState({
         status:'',css:''
     })
+    const navigate = useNavigate()
     const [image, setImage] = useState({
         preview: '',
         raw: ''
@@ -51,6 +56,17 @@ const App = () => {
         }
         fetchData()
     }, [])
+    const createUser = async (obj) => {
+        try{
+            const blogCreated = await userService.createUserAxios( obj )
+            setNotification({ status:'User Registered Successfully',css:'success' })
+            setTimeout(() => setNotification(''),2000)
+        } catch (exception) {
+            console.log(exception)
+            setNotification({ status:'Problem creating new User', css:'error' })
+            setTimeout(() => setNotification(''),2000)
+        }
+    }
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -63,6 +79,7 @@ const App = () => {
             setUsername('')
             setPassword('')
             setNotification({ status:'Login Successful', css:'success'  })
+            navigate('/index')
             setTimeout(() => setNotification(''),2000)
         } catch (exception) {
             console.log('login unSuccessfull')
@@ -132,36 +149,43 @@ const App = () => {
             </Toggleable>
         )
     }
-    if (user === null) {
-        return (
-            <div>
-                <NotificationMsg noti={notification}/>
-                <h2>Log in to Application</h2>
-                {loginForm()}
-            </div>
-        )
-    }
 
     return (
         <div>
-            <div>
-                <Link style={{ padding: 10 }} to='/'>Show Blog</Link>
-                <Link style={{ padding: 10 }} to='/createBlog'>Create Blog</Link>
-            </div>
-
-            <div>
-                <NotificationMsg noti={notification}/>
-                <h2>Blogs</h2>
-                <button onClick={() => {window.localStorage.removeItem('loggedUserObj');setUser(null)}}>Logout</button>
-            </div>
+            <nav>
+                { (!user) ?  (
+                    <>
+                        <Link style={{ padding: 10 }} to='/'>Home</Link>
+                        <Link style={{ padding: 10 }} to='/register'>Register</Link>
+                        <Link style={{ padding: 10 }} to='/login'>Log In</Link>
+                    </>
+                ):(
+                    <>
+                        <Link style={{ padding: 10 }} to='/index'>Home</Link>
+                        <Link style={{ padding: 10 }} to='/createBlog'>Create</Link>
+                        <button onClick={() => {
+                            window.localStorage.removeItem('loggedUserObj')
+                            setUser(null)
+                            navigate('/login')
+                        }}>Logout</button>
+                    </>
+                )}
+            </nav>
+            <NotificationMsg noti={notification}/>
             <Routes>
-                <Route path='/createBlog' element={<div>{blogForm()}</div>}/>
-                <Route path='/' element={blogs.map(blog => (
+                <Route path='/' element={!user ? <Home/> : <Navigate replace to ='/index'/>}/>
+                <Route path='/register' element={!user ? <RegisterUser createUser={createUser}/>:<Navigate replace to ='/index'/>}/>
+                <Route path='/login' element={!user ? loginForm():<Navigate replace to ='/index'/>}/>
+                <Route path='/index' element={user ? blogs.map(blog => (
                     <div key={blog._id}>
                         <BlogToggleable blog={blog} likeOption = {likeBlog} deleteOption={deleteBlog} currentUser={user}/>
                     </div>
-                ))}/>
+                )):<Navigate replace to ='/'/>}/>
+                <Route path='/createBlog' element={user ? <div>{blogForm()}</div> : <Navigate replace to ='/'/>}/>
             </Routes>
+            <footer>
+                <span>Sandesh Pradhan&#169;2024</span>
+            </footer>
         </div>
     )
 }

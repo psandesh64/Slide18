@@ -1,11 +1,30 @@
 .success{
-    background-color: green;
-  }
+  background-color: green;
+}
   
-  .updated{
-    background-color: yellow;
-  }
-  
-  .error{
-    background-color:red;
-  }
+.updated{
+  background-color: yellow;
+}
+
+.error{
+  background-color:red;
+}
+nav{
+  background-color: rgb(81, 90, 87);
+  padding: 15px;
+  color: white;
+  margin: 0; 
+}
+body{
+  margin: 0;
+}
+
+footer{
+  background-color: rgb(81, 90, 87);
+  padding: 15px;
+  color: white;
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  bottom: 0;
+}
