@@ -11,6 +11,8 @@ import Toggleable from './components/toggleable'
 import BlogToggleable from './components/blogtoggleable'
 import BlogForm from './components/blogform'
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
+import BlogHome from './pages/bloghomepage'
+import BlogEdit from './pages/blogedit'
 
 import Home from './pages/homepage'
 import RegisterUser from './pages/registeruser'
@@ -24,18 +26,18 @@ const App = () => {
         status:'',css:''
     })
     const navigate = useNavigate()
-    const [image, setImage] = useState({
-        preview: '',
-        raw: ''
-    })
-    const handlePhotoChange = (e) => {
-        if (e.target.files.length) {
-            setImage({
-                preview: URL.createObjectURL(e.target.files[0]),
-                raw: e.target.files[0],
-            })
-        }
-    }
+    // const [image, setImage] = useState({
+    //     preview: '',
+    //     raw: ''
+    // })
+    // const handlePhotoChange = (e) => {
+    //     if (e.target.files.length) {
+    //         setImage({
+    //             preview: URL.createObjectURL(e.target.files[0]),
+    //             raw: e.target.files[0],
+    //         })
+    //     }
+    // }
 
     const blogFormRef = useRef()
     useEffect(() => {
@@ -104,12 +106,9 @@ const App = () => {
             setTimeout(() => setNotification(''),2000)
         }
     }
-    const likeBlog = async (id) => {
+    const setBlogObj = async (blogObj) => {
         try {
-            const blogLiked = await blogService.putBloglikes(id)
-            console.log(blogLiked)
-            const updatedBlogs = await blogService.getBlogs()
-            setBlogs(updatedBlogs)
+            setBlogs(blogObj)
         } catch (exception) {
             console.log(exception)
         }
@@ -121,6 +120,7 @@ const App = () => {
                 const blogDeleted = await blogService.deleteBlog(id)
                 const updatedBlogs = await blogService.getBlogs()
                 setBlogs(updatedBlogs)
+                navigate('/index')
             }
             else {alert('Operation Cancelled')}
         } catch (exception) {
@@ -142,13 +142,13 @@ const App = () => {
         )
     }
 
-    const blogForm  = () => {
-        return (
-            <Toggleable buttonLabel='New Blog' ref={blogFormRef}>
-                <BlogForm createBlog={addNewBlog} handlePhotoChange={handlePhotoChange} image={image}/>
-            </Toggleable>
-        )
-    }
+    // const blogForm  = () => {
+    //     return (
+    //         <Toggleable buttonLabel='New Blog' ref={blogFormRef}>
+    //             <BlogForm createBlog={addNewBlog} handlePhotoChange={handlePhotoChange} image={image}/>
+    //         </Toggleable>
+    //     )
+    // }
 
     return (
         <div>
@@ -162,7 +162,6 @@ const App = () => {
                 ):(
                     <>
                         <Link style={{ padding: 10 }} to='/index'>Home</Link>
-                        <Link style={{ padding: 10 }} to='/createBlog'>Create</Link>
                         <button onClick={() => {
                             window.localStorage.removeItem('loggedUserObj')
                             setUser(null)
@@ -176,12 +175,15 @@ const App = () => {
                 <Route path='/' element={!user ? <Home/> : <Navigate replace to ='/index'/>}/>
                 <Route path='/register' element={!user ? <RegisterUser createUser={createUser}/>:<Navigate replace to ='/index'/>}/>
                 <Route path='/login' element={!user ? loginForm():<Navigate replace to ='/index'/>}/>
-                <Route path='/index' element={user ? blogs.map(blog => (
-                    <div key={blog._id}>
-                        <BlogToggleable blog={blog} likeOption = {likeBlog} deleteOption={deleteBlog} currentUser={user}/>
-                    </div>
-                )):<Navigate replace to ='/'/>}/>
-                <Route path='/createBlog' element={user ? <div>{blogForm()}</div> : <Navigate replace to ='/'/>}/>
+                <Route path='/index' element={user ?
+                    <BlogHome
+                        blogs={blogs}
+                        addnewBlog={addNewBlog}
+                        blogFormRef={blogFormRef}
+                        setBlogObj={setBlogObj}
+                        user={user}/>
+                    :<Navigate replace to ='/'/>}/>
+                <Route path='/blogedit/:id' element={<BlogEdit setBlogObj={setBlogObj} deleteBlog={deleteBlog}/>}/>
             </Routes>
             <footer>
                 <span>Sandesh Pradhan&#169;2024</span>

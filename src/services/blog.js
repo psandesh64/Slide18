@@ -23,6 +23,10 @@ const getBlogs = async () => {
     const response = await axios.get(baseUrl)
     return response.data
 }
+const getBlog = async (id) => {
+    const response = await axios.get(`${baseUrl}/${id}`)
+    return response.data
+}
 const putBloglikes = async (id) => {
     const config = {
         headers: { Authorization: token }
@@ -33,6 +37,19 @@ const putBloglikes = async (id) => {
         return response.data
     } catch (error) {
         console.error('Error updating blog likes:', error)
+        throw error
+    }
+}
+const updateBlog = async (id, params) => {
+    const config = {
+        headers: { Authorization: token }
+    }
+
+    try {
+        const response = await axios.put(`${baseUrl}/${id}`, params, config)
+        return response.data
+    } catch (error) {
+        console.error('Error updating blog:', error)
         throw error
     }
 }
@@ -49,4 +66,4 @@ const deleteBlog = async (id) => {
         throw error
     }
 }
-export default { createBlog, setToken, getBlogs, putBloglikes, deleteBlog }
+export default { createBlog, setToken, getBlogs, getBlog, putBloglikes, updateBlog, deleteBlog }

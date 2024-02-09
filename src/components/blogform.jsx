@@ -3,7 +3,7 @@ import { useState } from 'react'
 const BlogForm = ({ createBlog, handlePhotoChange, image }) => {
     const [newBlog, setNewBlog] = useState({
         title: '',
-        author: '',
+        content: '',
         url:'',
         likes: 0
     })
@@ -11,13 +11,13 @@ const BlogForm = ({ createBlog, handlePhotoChange, image }) => {
         event.preventDefault()
         createBlog({
             title: newBlog.title,
-            author: newBlog.author,
+            content: newBlog.content,
             url:newBlog.url,
             image:image.raw
         })
         setNewBlog({
             title: '',
-            author: '',
+            content: '',
             url:'',
             image:null
         })
@@ -29,9 +29,9 @@ const BlogForm = ({ createBlog, handlePhotoChange, image }) => {
             <label>Title : </label>
             <input type='text' name='title' value={newBlog.title}
                 onChange={(event) => setNewBlog({ ...newBlog,title:event.target.value })}/>
-            <label>Author : </label>
-            <input type='text' name='author' value={newBlog.author}
-                onChange={(event) => setNewBlog({ ...newBlog,author:event.target.value })}/>
+            <label>Content : </label>
+            <input type='text' name='author' value={newBlog.content}
+                onChange={(event) => setNewBlog({ ...newBlog,content:event.target.value })}/>
             <input
                 name="image"
                 type="file"

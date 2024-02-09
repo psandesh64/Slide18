@@ -9,9 +9,10 @@ const BlogToggleable = ({ blog,likeOption,deleteOption,currentUser }) => {
     const toggleVisibility = () => {
         setVisible(!visible)
     }
+    const style = { display:'none' }
 
     return (
-        <div>
+        <div style={style}>
             <span>Title: {blog.title}</span>
             <button style={hideWhenVisible}onClick={toggleVisibility}>Show</button>
             <button style={showhenVisible} onClick={toggleVisibility}>Hide</button>
