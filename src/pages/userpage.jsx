@@ -1,6 +1,7 @@
 import { useState, useEffect,useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import userService from '../services/user'
+import { Button } from 'react-bootstrap'
 
 const UserPage = ({ user }) => {
     const [userInfo,setUserInfo] = useState({
@@ -41,8 +42,8 @@ const UserPage = ({ user }) => {
             <p>Username: {userInfo.username}</p>
             <p>Followed By: {userInfo.follower ? userInfo.follower.length : 0}</p>
             <p>Follows: {userInfo.follows ? userInfo.follows.length : 0}</p>
-            {(userCheckRef.current) ? null : <button onClick={() => followEvent(userInfo._id)}>
-                {followerCheckRef.current ? 'Unfollow': 'follow'}</button>}
+            {(userCheckRef.current) ? null : <Button variant='primary' onClick={() => followEvent(userInfo._id)}>
+                {followerCheckRef.current ? 'Unfollow': 'follow'}</Button>}
         </div>
     )
 }

@@ -15,6 +15,7 @@ import BlogHome from './pages/bloghomepage'
 import BlogEdit from './pages/blogedit'
 import UserPage from './pages/userpage'
 import AllUserPage from './pages/alluserpage'
+import { Nav, Navbar, Button } from 'react-bootstrap'
 
 import Home from './pages/homepage'
 import RegisterUser from './pages/registeruser'
@@ -67,7 +68,7 @@ const App = () => {
             setTimeout(() => setNotification(''),2000)
         } catch (exception) {
             console.log(exception)
-            setNotification({ status:'Problem creating new User', css:'error' })
+            setNotification({ status:'Problem creating new User', css:'danger' })
             setTimeout(() => setNotification(''),2000)
         }
     }
@@ -89,7 +90,7 @@ const App = () => {
             setTimeout(() => setNotification(''),2000)
         } catch (exception) {
             console.log('login unSuccessfull')
-            setNotification({ status:'Incorrect Credentials', css:'error' })
+            setNotification({ status:'Incorrect Credentials', css:'danger' })
             setTimeout(() => setNotification(''),2000)
             console.error(exception)
         }
@@ -106,7 +107,7 @@ const App = () => {
             setTimeout(() => setNotification(''),2000)
         } catch (exception) {
             console.log(exception)
-            setNotification({ status:'Problem creating new Blog', css:'error' })
+            setNotification({ status:'Problem creating new Blog', css:'danger' })
             setTimeout(() => setNotification(''),2000)
         }
     }
@@ -155,49 +156,57 @@ const App = () => {
     // }
 
     return (
-        <div>
-            <nav>
-                { (!user) ?  (
-                    <>
-                        <Link style={{ padding: 10 }} to='/'>Home</Link>
-                        <Link style={{ padding: 10 }} to='/register'>Register</Link>
-                        <Link style={{ padding: 10 }} to='/login'>Log In</Link>
-                    </>
-                ):(
-                    <>
-                        <Link style={{ padding: 10 }} onClick={ async() => {
-                            const updatedBlogs = await blogService.getBlogs()
-                            setBlogs(updatedBlogs)
-                        }}to='/index'>Home</Link>
-                        <Link style={{ padding: 10 }} to='/all-user'>All Users</Link>
-                        <button onClick={() => {
-                            window.localStorage.removeItem('loggedUserObj')
-                            setUser(null)
-                            navigate('/login')
-                        }}>Logout</button>
-                    </>
-                )}
-            </nav>
+        <div className='container'>
+            <Navbar sticky='top' bg="dark" data-bs-theme="dark">
+                <Navbar.Brand href="#">GatyU Blogs</Navbar.Brand>
+                <Nav className='me-auto'>
+                    { (!user) ?  (
+                        <>
+                            <Link className='nav-link' style={{ padding: 10 }} to='/'>Home</Link>
+                            <Link className='nav-link' style={{ padding: 10 }} to='/register'>Register</Link>
+                            <Link className='nav-link' style={{ padding: 10 }} to='/login'>Log In</Link>
+                        </>
+                    ):(
+                        <>
+                            <Link className='nav-link' style={{ padding: 10 }} onClick={ async() => {
+                                const updatedBlogs = await blogService.getBlogs()
+                                setBlogs(updatedBlogs)
+                            }}to='/index'>Home</Link>
+                            <Link className='nav-link' style={{ padding: 10 }} to='/all-user'>All Users</Link>
+                            <Link className='nav-link' style={{ padding: 10 }}>{user.name} logged in</Link>
+                            <Button variant='primary' onClick={() => {
+                                window.localStorage.removeItem('loggedUserObj')
+                                setUser(null)
+                                navigate('/login')
+                                setNotification({ status:'Logout Successful', css:'success' })
+                                setTimeout(() => setNotification(''),2000)
+                            }}>Logout</Button>
+                        </>
+                    )}
+                </Nav>
+            </Navbar>
             <NotificationMsg noti={notification}/>
-            <Routes>
-                <Route path='/' element={!user ? <Home/> : <Navigate replace to ='/index'/>}/>
-                <Route path='/register' element={!user ? <RegisterUser createUser={createUser}/>:<Navigate replace to ='/index'/>}/>
-                <Route path='/login' element={!user ? loginForm():<Navigate replace to ='/index'/>}/>
-                <Route path='/index' element={user ?
-                    <BlogHome
-                        blogs={blogs}
-                        addnewBlog={addNewBlog}
-                        blogFormRef={blogFormRef}
-                        setBlogObj={setBlogObj}
-                        user={user}/>
-                    :<Navigate replace to ='/'/>}/>
-                <Route path='/blogedit/:id' element={<BlogEdit setBlogObj={setBlogObj} deleteBlog={deleteBlog}/>}/>
-                <Route path='/user-info/:id' element={<UserPage user={user}/>}/>
-                <Route path='/all-user' element={<AllUserPage/>}/>
-            </Routes>
-            <footer>
+            <div style={{ marginBottom:'50px' }}>
+                <Routes>
+                    <Route path='/' element={!user ? <Home/> : <Navigate replace to ='/index'/>}/>
+                    <Route path='/register' element={!user ? <RegisterUser createUser={createUser}/>:<Navigate replace to ='/index'/>}/>
+                    <Route path='/login' element={!user ? loginForm():<Navigate replace to ='/index'/>}/>
+                    <Route path='/index' element={user ?
+                        <BlogHome
+                            blogs={blogs}
+                            addnewBlog={addNewBlog}
+                            blogFormRef={blogFormRef}
+                            setBlogObj={setBlogObj}
+                            user={user}/>
+                        :<Navigate replace to ='/'/>}/>
+                    <Route path='/blogedit/:id' element={<BlogEdit setBlogObj={setBlogObj} deleteBlog={deleteBlog}/>}/>
+                    <Route path='/user-info/:id' element={<UserPage user={user}/>}/>
+                    <Route path='/all-user' element={<AllUserPage/>}/>
+                </Routes>
+            </div>
+            <Navbar className='container' fixed='bottom'>
                 <span>Sandesh Pradhan&#169;2024</span>
-            </footer>
+            </Navbar>
         </div>
     )
 }

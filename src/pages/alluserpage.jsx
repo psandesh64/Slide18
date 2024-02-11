@@ -1,5 +1,6 @@
 import userService from '../services/user'
 import { useState, useEffect,useRef } from 'react'
+import { ListGroup, Form } from 'react-bootstrap'
 import { useParams, useNavigate } from 'react-router-dom'
 
 
@@ -15,20 +16,20 @@ const AllUserPage = () => {
     },[])
 
     return (
-        <div>
+        <ListGroup as='ul'>
             {allUser.map(oneUser => {
                 return (
 
-                    <div style={{ border:'1px solid red' }} key={oneUser._id}>
-                        <a href="#" onClick={() => navigate(`/user-info/${oneUser._id}`)}>
-                            <p>Name:{oneUser.name}</p>
+                    <ListGroup.Item key={oneUser._id}>
+                        <a onClick={() => navigate(`/user-info/${oneUser._id}`)}>
+                            <Form.Label>Name:{oneUser.name}</Form.Label>
                         </a>
                         <p>Username:{oneUser.username}</p>
                         <p>Follower:{oneUser.follower.length}</p>
-                    </div>
+                    </ListGroup.Item>
                 )
             })}
-        </div>
+        </ListGroup>
     )
 }
 export default AllUserPage

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import { Form,Button } from 'react-bootstrap'
 const RegisterUser = ({ createUser }) => {
     const [name,setName]=useState('')
     const [username,setUsername]=useState('')
@@ -17,19 +17,25 @@ const RegisterUser = ({ createUser }) => {
     }
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <label>Name : </label>
-                <input type='text' name='name' value={name}
-                    onChange={(event) => setName(event.target.value)}/><br/>
-                <label>Username : </label>
-                <input type='text' name='username' value={username}
-                    onChange={(event) => setUsername(event.target.value)}/><br/>
-                <label>Password : </label>
-                <input type='password' name='password' value={password}
-                    onChange={(event) => setPassword(event.target.value)}/><br/>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Form.Label>Name : </Form.Label>
+                    <Form.Control type='text' name='name' value={name}
+                        onChange={(event) => setName(event.target.value)}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Username : </Form.Label>
+                    <Form.Control type='text' name='username' value={username}
+                        onChange={(event) => setUsername(event.target.value)}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Password : </Form.Label>
+                    <Form.Control type='password' name='password' value={password}
+                        onChange={(event) => setPassword(event.target.value)}/>
+                </Form.Group>
 
-                <button type='submit'>Save</button>
-            </form>
+                <Button className='m-2' variant='primary' type='submit'>Save</Button>
+            </Form>
         </div>
     )
 }
