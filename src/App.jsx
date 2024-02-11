@@ -13,6 +13,8 @@ import BlogForm from './components/blogform'
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
 import BlogHome from './pages/bloghomepage'
 import BlogEdit from './pages/blogedit'
+import UserPage from './pages/userpage'
+import AllUserPage from './pages/alluserpage'
 
 import Home from './pages/homepage'
 import RegisterUser from './pages/registeruser'
@@ -81,6 +83,8 @@ const App = () => {
             setUsername('')
             setPassword('')
             setNotification({ status:'Login Successful', css:'success'  })
+            const updatedBlogs = await blogService.getBlogs() // Fetch the updated list of blogs
+            setBlogs(updatedBlogs)
             navigate('/index')
             setTimeout(() => setNotification(''),2000)
         } catch (exception) {
@@ -161,7 +165,11 @@ const App = () => {
                     </>
                 ):(
                     <>
-                        <Link style={{ padding: 10 }} to='/index'>Home</Link>
+                        <Link style={{ padding: 10 }} onClick={ async() => {
+                            const updatedBlogs = await blogService.getBlogs()
+                            setBlogs(updatedBlogs)
+                        }}to='/index'>Home</Link>
+                        <Link style={{ padding: 10 }} to='/all-user'>All Users</Link>
                         <button onClick={() => {
                             window.localStorage.removeItem('loggedUserObj')
                             setUser(null)
@@ -184,6 +192,8 @@ const App = () => {
                         user={user}/>
                     :<Navigate replace to ='/'/>}/>
                 <Route path='/blogedit/:id' element={<BlogEdit setBlogObj={setBlogObj} deleteBlog={deleteBlog}/>}/>
+                <Route path='/user-info/:id' element={<UserPage user={user}/>}/>
+                <Route path='/all-user' element={<AllUserPage/>}/>
             </Routes>
             <footer>
                 <span>Sandesh Pradhan&#169;2024</span>
